@@ -129,9 +129,6 @@ var ImageModule = function () {
 				part: part
 			});
 			var imgProps = tagValue.imgProps;
-			if (!imgProps && this.options.getProps) {
-				imgProps = this.options.getProps(tagValue, part.value);
-			}
 			var insertHyperLink = !!imgProps && imgProps.link;
 			if (!tagValue) {
 				return { value: this.fileTypeConfig.tagTextXml };

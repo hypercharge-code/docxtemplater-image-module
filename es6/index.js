@@ -97,10 +97,7 @@ class ImageModule {
 		const tagValue = options.scopeManager.getValue(part.value, {
 			part: part,
 		});
-		let imgProps = tagValue.imgProps;
-		if (!imgProps && this.options.getProps) {
-			imgProps = this.options.getProps(tagValue, part.value);
-		}
+		const imgProps = tagValue.imgProps;
 		const insertHyperLink = !!imgProps && imgProps.link;
 		if (!tagValue) {
 			return {value: this.fileTypeConfig.tagTextXml};
