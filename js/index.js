@@ -98,10 +98,10 @@ var ImageModule = function () {
 				return this.options.setParser(placeHolderContent);
 			}
 			if (placeHolderContent.substring(0, 2) === "%%") {
-				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true, expandTo: 'w:p' };
+				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true, expandTo: "w:p" };
 			}
 			if (placeHolderContent.substring(0, 1) === "%") {
-				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false, expandTo: 'w:t' };
+				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false, expandTo: "w:t" };
 			}
 			return null;
 		}
@@ -133,7 +133,6 @@ var ImageModule = function () {
 			} else if ((typeof tagValue === "undefined" ? "undefined" : _typeof(tagValue)) === "object") {
 				return this.getRenderedPart(part, tagValue.rId, tagValue.sizePixel);
 			}
-			
 			var imgManager = new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			var imgBuffer = this.options.getImage(tagValue, part.value);
 			var rId = imgManager.addImageRels(this.getNextImageName(), imgBuffer);

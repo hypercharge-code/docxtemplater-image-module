@@ -70,10 +70,10 @@ class ImageModule {
 			return this.options.setParser(placeHolderContent);
 		}
 		if (placeHolderContent.substring(0, 2) === "%%") {
-			return {type, value: placeHolderContent.substr(2), module, centered: true};
+			return {type, value: placeHolderContent.substr(2), module, centered: true, expandTo: "w:p"};
 		}
 		if (placeHolderContent.substring(0, 1) === "%") {
-			return {type, value: placeHolderContent.substr(1), module, centered: false};
+			return {type, value: placeHolderContent.substr(1), module, centered: false, expandTo: "w:t"};
 		}
 		return null;
 	}
