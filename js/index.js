@@ -98,10 +98,10 @@ var ImageModule = function () {
 				return this.options.setParser(placeHolderContent);
 			}
 			if (placeHolderContent.substring(0, 2) === "%%") {
-				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true };
+				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true, expandTo: "w:p" };
 			}
 			if (placeHolderContent.substring(0, 1) === "%") {
-				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false };
+				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false, expandTo: "w:t" };
 			}
 			return null;
 		}
