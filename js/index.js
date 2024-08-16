@@ -8,7 +8,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var templates = require("./templates");
 var DocUtils = require("docxtemplater").DocUtils;
-var DOMParser = require("xmldom").DOMParser;
+var DOMParser = require("@xmldom/xmldom").DOMParser;
 
 function isNaN(number) {
 	return !(number === number);
@@ -98,10 +98,10 @@ var ImageModule = function () {
 				return this.options.setParser(placeHolderContent);
 			}
 			if (placeHolderContent.substring(0, 2) === "%%") {
-				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true, expandTo: 'w:p' };
+				return { type: type, value: placeHolderContent.substr(2), module: module, centered: true };
 			}
 			if (placeHolderContent.substring(0, 1) === "%") {
-				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false, expandTo: 'w:t' };
+				return { type: type, value: placeHolderContent.substr(1), module: module, centered: false };
 			}
 			return null;
 		}
@@ -128,17 +128,21 @@ var ImageModule = function () {
 			var tagValue = options.scopeManager.getValue(part.value, {
 				part: part
 			});
+			var imgProps = tagValue.imgProps;
+			if (!imgProps && this.options.getProps) {
+				imgProps = this.options.getProps(tagValue, part.value);
+			}
+			var insertHyperLink = !!imgProps && imgProps.link;
 			if (!tagValue) {
 				return { value: this.fileTypeConfig.tagTextXml };
 			} else if ((typeof tagValue === "undefined" ? "undefined" : _typeof(tagValue)) === "object") {
-				return this.getRenderedPart(part, tagValue.rId, tagValue.sizePixel);
+				return this.getRenderedPart(part, tagValue.rId, tagValue.sizePixel, insertHyperLink);
 			}
-			
 			var imgManager = new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			var imgBuffer = this.options.getImage(tagValue, part.value);
-			var rId = imgManager.addImageRels(this.getNextImageName(), imgBuffer);
+			var rId = imgManager.addImageRels(this.getNextImageName(), imgBuffer, imgProps);
 			var sizePixel = this.options.getSize(imgBuffer, tagValue, part.value);
-			return this.getRenderedPart(part, rId, sizePixel);
+			return this.getRenderedPart(part, rId, sizePixel, insertHyperLink);
 		}
 	}, {
 		key: "resolve",
@@ -159,21 +163,27 @@ var ImageModule = function () {
 				var imgBuffer = _this.options.getImage(value, part.value);
 				resolve(imgBuffer);
 			}).then(function (imgBuffer) {
-				var rId = imgManager.addImageRels(_this.getNextImageName(), imgBuffer);
+				var imgProps = void 0;
+				if (_this.options.getProps) {
+					imgProps = _this.options.getProps(imgBuffer, value, part.value);
+				}
+
+				var rId = imgManager.addImageRels(_this.getNextImageName(), imgBuffer, imgProps);
 				return new Promise(function (resolve) {
 					var sizePixel = _this.options.getSize(imgBuffer, value, part.value);
 					resolve(sizePixel);
 				}).then(function (sizePixel) {
 					return {
 						rId: rId,
-						sizePixel: sizePixel
+						sizePixel: sizePixel,
+						imgProps: imgProps
 					};
 				});
 			});
 		}
 	}, {
 		key: "getRenderedPart",
-		value: function getRenderedPart(part, rId, sizePixel) {
+		value: function getRenderedPart(part, rId, sizePixel, insertHyperLink) {
 			if (isNaN(rId)) {
 				throw new Error("rId is NaN, aborting");
 			}
@@ -183,7 +193,7 @@ var ImageModule = function () {
 			if (this.fileType === "pptx") {
 				newText = this.getRenderedPartPptx(part, rId, size, centered);
 			} else {
-				newText = this.getRenderedPartDocx(rId, size, centered);
+				newText = this.getRenderedPartDocx(rId, size, centered, insertHyperLink);
 			}
 			return { value: newText };
 		}
@@ -203,8 +213,8 @@ var ImageModule = function () {
 		}
 	}, {
 		key: "getRenderedPartDocx",
-		value: function getRenderedPartDocx(rId, size, centered) {
-			return centered ? templates.getImageXmlCentered(rId, size) : templates.getImageXml(rId, size);
+		value: function getRenderedPartDocx(rId, size, centered, insertHyperLink) {
+			return centered ? templates.getImageXmlCentered(rId, size, insertHyperLink) : templates.getImageXml(rId, size, insertHyperLink);
 		}
 	}, {
 		key: "getNextImageName",
