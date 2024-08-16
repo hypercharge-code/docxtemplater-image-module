@@ -4,7 +4,6 @@
 const fs = require("fs");
 const Docxtemplater = require("docxtemplater");
 const path = require("path");
-const JSZip = require("jszip");
 const ImageModule = require("./index.js");
 const testutils = require("docxtemplater/js/tests/utils");
 const shouldBeSame = testutils.shouldBeSame;
@@ -44,12 +43,13 @@ beforeEach(function () {
 
 	this.loadAndRender = function () {
 		const file = testutils.createDoc(this.name);
-		this.doc = new Docxtemplater();
-		const inputZip = new JSZip(file.loadedContent);
-		this.doc.loadZip(inputZip).setData(this.data);
-		const imageModule = new ImageModule(this.opts);
-		this.doc.attachModule(imageModule);
-		this.renderedDoc = this.doc.render();
+		this.doc = new Docxtemplater(
+			file.zip,
+			{
+				modules: [new ImageModule(this.opts)],
+			}
+		);
+		this.renderedDoc = this.doc.render(this.data);
 		const doc = this.renderedDoc;
 		shouldBeSame({doc, expectedName: this.expectedName});
 	};
@@ -166,6 +166,11 @@ function testStart() {
 testutils.setExamplesDirectory(path.resolve(__dirname, "..", "examples"));
 testutils.setStartFunction(testStart);
 fileNames.forEach(function (filename) {
-	testutils.loadFile(filename, testutils.loadDocument);
+	testutils.loadFile(filename, (err, name, content) => {
+		if (err) {
+			throw err;
+		}
+		return testutils.loadDocument(name, content);
+	});
 });
 testutils.start();
