@@ -1,6 +1,6 @@
 {
   "name": "docxtemplater-image-module-free",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "Open Source Image Module for docxtemplater",
   "main": "js/index.js",
   "scripts": {
@@ -15,20 +15,22 @@
     "uglify": "uglifyjs build/imagemodule.js > build/imagemodule.min.js"
   },
   "devDependencies": {
-    "babel-cli": "^6.11.4",
-    "babel-eslint": "^7.1.1",
-    "babel-preset-es2015": "^6.3.13",
-    "browserify": "^14.0.0",
-    "chai": "^3.4.1",
-    "docxtemplater": "^3.0.0",
-    "eslint": "^3.15.0",
-    "image-size": "^0.5.1",
-    "istanbul": "^0.4.5",
-    "jszip": "^2.6.1",
-    "mkdirp": "^0.5.1",
-    "mocha": "^3.2.0",
-    "rimraf": "^2.5.4",
-    "uglifyjs": "^2.4.10"
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/eslint-parser": "^7.23.10",
+    "@babel/preset-env": "^7.23.9",
+    "browserify": "^17.0.0",
+    "chai": "^5.1.1",
+    "docxtemplater": "^3.49.2",
+    "eslint": "^8.57.0",
+    "eslint-scope": "^8.0.2",
+    "image-size": "^1.1.1",
+    "istanbul": "0.4.5",
+    "mkdirp": "^3.0.1",
+    "mocha": "^10.7.3",
+    "pizzip": "^3.1.6",
+    "rimraf": "^5.0.5",
+    "uglifyjs": "^2.4.11"
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,6 @@
   "author": "Dk Saha",
   "license": "MIT",
   "dependencies": {
-    "xmldom": "^0.1.27"
+    "@xmldom/xmldom": "^0.8.10"
   }
 }
